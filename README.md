@@ -1,3 +1,3 @@
 # Pong
 
-# il faut installer pygame avec pip install pygame
+il faut installer pygame avec pip install pygame
