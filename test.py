@@ -29,6 +29,9 @@ pygame.display.set_caption("Menu de Sélection de Couleurs")
 
 clock = pygame.time.Clock()
 
+
+
+    
 def get_rainbow_color(angle):
     """Obtenir une couleur de l'arc-en-ciel en fonction de l'angle."""
     angle %= NUM_COLORS  # Assurez-vous que l'angle reste dans la plage 0-359
@@ -36,6 +39,11 @@ def get_rainbow_color(angle):
     return (int(rgb[0] * 255), int(rgb[1] * 255), int(rgb[2] * 255))
 
 def draw_color_menu(angle, x_position, player_text, controls):
+    
+    font_title = pygame.font.Font(None, 36)
+    text_title = font_title.render("Paramètres", True, (255, 255, 255))
+    screen.blit(text_title, (400 - text_title.get_width() // 2, 50))
+    
     # Calcul de la couleur de l'arc-en-ciel en fonction de l'angle
     current_color = get_rainbow_color(angle)
 
@@ -64,6 +72,10 @@ def draw_color_menu(angle, x_position, player_text, controls):
     
     screen.blit(text_up, (x_position - text_up.get_width() // 2, y_up))
     screen.blit(text_down, (x_position - text_down.get_width() // 2, y_down))
+    
+    font_title = pygame.font.Font(None, 26)
+    text_title = font_title.render("RETOUR", True, (255, 255, 255))
+    screen.blit(text_title, (400 - text_title.get_width() // 2, 500))
 
 def change_controls(controls, event):
     if event.type == pygame.KEYDOWN:
@@ -115,14 +127,15 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Clic gauche
                 # Vérification du clic sur les boutons de défilement
-                if WIDTH // 4 - 80 <= event.pos[0] <= WIDTH // 4 - 50 and 80 <= event.pos[1] <= 130:
+                if WIDTH // 4 - 80 <= event.pos[0] <= WIDTH // 4 - 50 and 235 <= event.pos[1] <= 285:
                     angle1 -= 10
-                elif WIDTH // 4 + 50 <= event.pos[0] <= WIDTH // 4 + 80 and 80 <= event.pos[1] <= 130:
+                elif WIDTH // 4 + 50 <= event.pos[0] <= WIDTH // 4 + 80 and 235 <= event.pos[1] <= 285:
                     angle1 += 10
-                elif WIDTH * 3 // 4 - 80 <= event.pos[0] <= WIDTH * 3 // 4 - 50 and 80 <= event.pos[1] <= 130:
+                elif WIDTH * 3 // 4 - 80 <= event.pos[0] <= WIDTH * 3 // 4 - 50 and 235 <= event.pos[1] <= 285:
                     angle2 -= 10
-                elif WIDTH * 3 // 4 + 50 <= event.pos[0] <= WIDTH * 3 // 4 + 80 and 80 <= event.pos[1] <= 130:
+                elif WIDTH * 3 // 4 + 50 <= event.pos[0] <= WIDTH * 3 // 4 + 80 and 235 <= event.pos[1] <= 285:
                     angle2 += 10
+
         elif event.type in [pygame.KEYDOWN, pygame.KEYUP]:
             # Appeler la fonction appropriée en fonction du joueur
             if event.type == pygame.KEYDOWN:
