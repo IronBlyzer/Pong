@@ -1,5 +1,4 @@
 import pygame
-import random
 
 # Initialisation de Pygame
 pygame.init()
@@ -24,12 +23,9 @@ player2_y = HEIGHT // 2 - PADDLE_HEIGHT // 2
 ball_x, ball_y = WIDTH // 2, HEIGHT // 2
 ball_speed_x, ball_speed_y = 5, 5
 
-# Ajout de variables pour les points et les événements aléatoires
+# Ajout de variables pour les points
 player1_score = 0
 player2_score = 0
-random_event_counter = 0
-random_event_duration = 100
-event_ball_speed_factor = 0.5  # Facteur de vitesse pendant l'événement
 
 # Couleurs des raquettes
 player1_color = RED
@@ -47,11 +43,36 @@ player2_controls_qwerty = {pygame.K_w: -5, pygame.K_s: 5}
 # Boucle principale du jeu
 clock = pygame.time.Clock()
 running = True
+paused = False
+
+def reset_ball():
+    return WIDTH // 2, HEIGHT // 2
 
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                running = False
+            elif event.key == pygame.K_SPACE:
+                paused = not paused
+
+    if paused:
+        # Si le jeu est en pause, ne pas mettre à jour les mouvements
+        clock.tick(FPS)
+        continue
+
+    # Mouvements des raquettes
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w] and player1_y > 0:
+        player1_y -= 5
+    if keys[pygame.K_s] and player1_y < HEIGHT - PADDLE_HEIGHT:
+        player1_y += 5
+    if keys[pygame.K_UP] and player2_y > 0:
+        player2_y -= 5
+    if keys[pygame.K_DOWN] and player2_y < HEIGHT - PADDLE_HEIGHT:
+        player2_y += 5
 
     if game_state == "menu":
         # Affichage du menu
@@ -105,16 +126,8 @@ while running:
             player2_y += player2_controls_qwerty.get(pygame.K_s, 0)
 
         # Mouvement de la balle
-        if random_event_counter < random_event_duration:
-            # Pendant l'événement, la balle continue son mouvement avec une vitesse réduite
-            ball_x += ball_speed_x * event_ball_speed_factor
-            ball_y += ball_speed_y * event_ball_speed_factor
-            random_event_counter += 1
-        else:
-            # Pendant les autres moments, la balle suit sa trajectoire normale
-            ball_x += ball_speed_x
-            ball_y += ball_speed_y
-            random_event_counter = 0
+        ball_x += ball_speed_x
+        ball_y += ball_speed_y
 
         # Rebondissement de la balle sur les murs
         if ball_y <= 0 or ball_y >= HEIGHT - BALL_SIZE:
@@ -127,13 +140,18 @@ while running:
         ):
             ball_speed_x = -ball_speed_x
 
-        # Gestion des points aléatoires
-        if random.randint(0, 1000) < 5:  # 5% de chance d'événement
-            # Ajouter ou soustraire aléatoirement des points
-            random_points = random.randint(-1, 1)
-            player1_score += random_points
-            random_points = random.randint(-1, 1)
-            player2_score += random_points
+        # Gestion des points
+        if ball_x <= 0:
+            player2_score += 1
+            ball_x, ball_y = reset_ball()
+
+        elif ball_x >= WIDTH - BALL_SIZE:
+            player1_score += 1
+            ball_x, ball_y = reset_ball()
+
+        # Vérifier si l'un des joueurs a atteint 5 points
+        if player1_score == 5 or player2_score == 5:
+            running = False
 
     elif game_state == "settings":
         # Affichage des paramètres
