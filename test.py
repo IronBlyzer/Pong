@@ -13,7 +13,7 @@ NUM_COLORS = 360
 
 angle1 = 0
 angle2 = 180
-
+#base controle
 player1_controls_azerty = {"up_key": pygame.K_z, "down_key": pygame.K_s}
 player2_controls_azerty = {"up_key": pygame.K_p, "down_key": pygame.K_m}
 
@@ -101,8 +101,8 @@ def change_controls_player2(event):
         elif event.key == pygame.K_RIGHT:
             print("Appuyez sur la nouvelle touche pour 'Up' de Player 2")
             new_key = wait_for_key()
-            player2_controls_azerty["up_key"] = new_key
-mouse_x, mouse_y = pygame.mouse.get_pos( )                     
+            player2_controls_azerty["up_key"] = new_key        
+                      
 running = True
 while running:
     for event in pygame.event.get():
@@ -118,8 +118,7 @@ while running:
                     angle2 -= 10
                 elif WIDTH * 3 // 4 + 50 <= event.pos[0] <= WIDTH * 3 // 4 + 80 and 235 <= event.pos[1] <= 285:
                     angle2 += 10
-                if WIDTH // 2 - 40 < mouse_x < WIDTH // 2 + 40 and HEIGHT - 50 < mouse_y < HEIGHT - 30:
-                    game_state = "menu"
+
         elif event.type in [pygame.KEYDOWN, pygame.KEYUP]:
             if event.type == pygame.KEYDOWN:
                 change_controls_player1(event)
