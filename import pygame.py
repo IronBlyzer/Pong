@@ -55,7 +55,9 @@ def draw_color_menu(angle, x_position, player_text):
     fleche2 = font_title.render(">", True, (255, 255, 255))
     screen.blit(fleche1, (x_position - 105, 200))
     screen.blit(fleche2, (x_position + 46, 200))
-  
+
+    
+    """
 def wait_for_key():
     waiting = True
     while waiting:
@@ -88,7 +90,7 @@ def change_controls_player2(event, player2_controls_Up, player2_controls_Down):
             new_key = wait_for_key()
             player2_controls_Down = new_key        
             return(player2_controls_Down)
-
+        """
 
 # Initial game state
 game_state = "menu"
@@ -120,10 +122,10 @@ while running:
                     elif WIDTH * 3 // 4 + 46 <= event.pos[0] <= WIDTH * 3 // 4 + 104 and 235 <= event.pos[1] <= 285:
                         angle2 += 10
     
-        elif event.type in [pygame.KEYDOWN, pygame.KEYUP]:
-           if game_state == "settings" and event.type == pygame.KEYDOWN:
-                change_controls_player1(event, player1_controls_Up, player1_controls_Down)
-                change_controls_player2(event, player2_controls_Up, player2_controls_Down)
+#        elif event.type in [pygame.KEYDOWN, pygame.KEYUP]:
+#          if game_state == "settings" and event.type == pygame.KEYDOWN:
+#                change_controls_player1(event, player1_controls_Up, player1_controls_Down)
+#                change_controls_player2(event, player2_controls_Up, player2_controls_Down)
 
     angle1 %= NUM_COLORS
     angle2 %= NUM_COLORS
