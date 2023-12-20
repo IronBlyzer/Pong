@@ -4,7 +4,7 @@ import colorsys
 
 pygame.init()
 
-WIDTH, HEIGHT = 1600, 900
+WIDTH, HEIGHT = 800, 600
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 NUM_COLORS = 360
@@ -21,10 +21,10 @@ vitpad = 10
 angle1 = 0
 angle2 = 180
 scoremax = 5
-player1_controls_Up = pygame.K_z
-player1_controls_Down = pygame.K_s
-player2_controls_Down = pygame.K_p
-player2_controls_Up = pygame.K_m
+player1_controls_Up = pygame.K_a
+player1_controls_Down = pygame.K_q
+player2_controls_Down = pygame.K_m
+player2_controls_Up = pygame.K_p
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pong")
 
@@ -39,7 +39,7 @@ def get_rainbow_color(angle):
     rgb = colorsys.hsv_to_rgb(angle / NUM_COLORS, 1.0, 1.0)
     return (int(rgb[0] * 255), int(rgb[1] * 255), int(rgb[2] * 255))
 
-def draw_color_menu(angle, x_position, player_text, controls):
+def draw_color_menu(angle, x_position, player_text):
     current_color = get_rainbow_color(angle)
 
     pygame.draw.rect(screen, current_color, (x_position - 50, 235, 100, 50))
@@ -48,50 +48,46 @@ def draw_color_menu(angle, x_position, player_text, controls):
     text = font.render(player_text, True, WHITE)
     screen.blit(text, (x_position - text.get_width() // 2, 150))
 
-    pygame.draw.rect(screen, (200, 200, 200), (x_position - 80, 235, 30, 50))  # Left button
-    pygame.draw.rect(screen, (200, 200, 200), (x_position + 50, 235, 30, 50))  # Right button
-
-    font = pygame.font.Font(None, 18)
-    text_up_key = pygame.key.name(controls.get("up_key", 0))
-    text_down_key = pygame.key.name(controls.get("down_key", 0))
-    text_up = font.render(f"Up ({text_up_key})", True, WHITE)
-    text_down = font.render(f"Down ({text_down_key})", True, WHITE)
-
-    y_up = 335
-    y_down = 355
-
-    screen.blit(text_up, (x_position - text_up.get_width() // 2, y_up))
-    screen.blit(text_down, (x_position - text_down.get_width() // 2, y_down))
-
+    pygame.draw.rect(screen, (BLACK), (x_position - 100, 235, 50, 50))  # Left button
+    pygame.draw.rect(screen, (BLACK), (x_position + 51, 235, 50, 50))  # Right button
+    font_title = pygame.font.Font(None, 152)
+    fleche1 = font_title.render("<", True, (255, 255, 255))
+    fleche2 = font_title.render(">", True, (255, 255, 255))
+    screen.blit(fleche1, (x_position - 105, 200))
+    screen.blit(fleche2, (x_position + 46, 200))
+  
 def wait_for_key():
     waiting = True
     while waiting:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 return event.key
-            
-def change_controls_player1(player1_controls_UP , player1_controls_Down , event):
+      
+def change_controls_player1(event , player1_controls_Up, player1_controls_Down):
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_UP:
             print("Appuyez sur la nouvelle touche pour 'Up' de Player 1")
             new_key = wait_for_key()
             player1_controls_Up = new_key
+            return(player1_controls_Up)
         elif event.key == pygame.K_LEFT:
             print("Appuyez sur la nouvelle touche pour 'Down' de Player 1")
             new_key = wait_for_key()
             player1_controls_Down = new_key
+            return(player1_controls_Down)
 
-def change_controls_player2(event):
+def change_controls_player2(event, player2_controls_Up, player2_controls_Down):
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_DOWN:
             print("Appuyez sur la nouvelle touche pour 'Down' de Player 2")
             new_key = wait_for_key()
             player2_controls_Up = new_key
+            return(player2_controls_Up)
         elif event.key == pygame.K_RIGHT:
             print("Appuyez sur la nouvelle touche pour 'Up' de Player 2")
             new_key = wait_for_key()
             player2_controls_Down = new_key        
-         
+            return(player2_controls_Down)
 
 
 # Initial game state
@@ -115,19 +111,19 @@ while running:
                     game_state = "menu"
                 else:
                     # Handle color menu clicks
-                    if WIDTH // 4 - 80 <= event.pos[0] <= WIDTH // 4 - 50 and 235 <= event.pos[1] <= 285:
+                    if WIDTH // 4 - 105 <= event.pos[0] <= WIDTH // 4 - 50 and 235 <= event.pos[1] <= 285:
                         angle1 -= 10
-                    elif WIDTH // 4 + 50 <= event.pos[0] <= WIDTH // 4 + 80 and 235 <= event.pos[1] <= 285:
+                    elif WIDTH // 4 + 46 <= event.pos[0] <= WIDTH // 4 + 104 and 235 <= event.pos[1] <= 285:
                         angle1 += 10
-                    elif WIDTH * 3 // 4 - 80 <= event.pos[0] <= WIDTH * 3 // 4 - 50 and 235 <= event.pos[1] <= 285:
+                    elif WIDTH * 3 // 4 - 105 <= event.pos[0] <= WIDTH * 3 // 4 - 50 and 235 <= event.pos[1] <= 285:
                         angle2 -= 10
-                    elif WIDTH * 3 // 4 + 50 <= event.pos[0] <= WIDTH * 3 // 4 + 80 and 235 <= event.pos[1] <= 285:
+                    elif WIDTH * 3 // 4 + 46 <= event.pos[0] <= WIDTH * 3 // 4 + 104 and 235 <= event.pos[1] <= 285:
                         angle2 += 10
     
         elif event.type in [pygame.KEYDOWN, pygame.KEYUP]:
-            if game_state == "settings" and event.type == pygame.KEYDOWN:
-                change_controls_player1(event)
-                change_controls_player2(event)
+           if game_state == "settings" and event.type == pygame.KEYDOWN:
+                change_controls_player1(event, player1_controls_Up, player1_controls_Down)
+                change_controls_player2(event, player2_controls_Up, player2_controls_Down)
 
     angle1 %= NUM_COLORS
     angle2 %= NUM_COLORS
@@ -150,6 +146,19 @@ while running:
 
         draw_color_menu(angle1, WIDTH // 4, "Player 1")
         draw_color_menu(angle2, WIDTH * 3 // 4, "Player 2")
+        
+        font = pygame.font.Font(None, 18)
+        text_up1 = font.render(f"Up ({pygame.key.name(player1_controls_Up)})", True, WHITE)
+        text_down1 = font.render(f"Down ({pygame.key.name(player1_controls_Down)})", True, WHITE)
+        text_up2 = font.render(f"Up ({pygame.key.name(player2_controls_Up)})", True, WHITE)
+        text_down2 = font.render(f"Down ({pygame.key.name(player2_controls_Down)})", True, WHITE)
+        y_up = 335
+        y_down = 355
+        screen.blit(text_up1, (WIDTH // 4 - text_up1.get_width() // 2, y_up))
+        screen.blit(text_down1, (WIDTH // 4 - text_down1.get_width() // 2, y_down))
+        screen.blit(text_up2, (WIDTH * 3 // 4 - text_up2.get_width() // 2, y_up))
+        screen.blit(text_down2, (WIDTH * 3 // 4 - text_down2.get_width() // 2, y_down))
+  
 
         font_return = pygame.font.Font(None, 26)
         text_return = font_return.render("RETURN", True, WHITE)
@@ -172,15 +181,13 @@ while running:
         elif keys[player1_controls_Down] and player1_y < HEIGHT - PADDLE_HEIGHT:
             player1_y += vitpad
             print(player1_y)
-        elif keys[player2_controls_Up] and player2_y < HEIGHT - PADDLE_HEIGHT:
+        elif keys[player2_controls_Down] and player2_y < HEIGHT - PADDLE_HEIGHT:
             player2_y += vitpad
             print(player2_y)
-        elif keys[player2_controls_Down] and player2_y > 0:
+        elif keys[player2_controls_Up] and player2_y > 0:
             player2_y -= vitpad
             print(player2_y)
-        
-
- 
+     
 
         ball_x += ball_speed_x
         ball_y += ball_speed_y
