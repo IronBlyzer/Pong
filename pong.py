@@ -4,7 +4,6 @@ from pygame.locals import *
 import colorsys
 import sys
 
-
 pygame.init()
 
 pygame.mixer.init()
@@ -19,7 +18,6 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 NUM_COLORS = 360
 
-
 player1_y = HEIGHT // 2 - PADDLE_HEIGHT // 2
 player2_y = HEIGHT // 2 - PADDLE_HEIGHT // 2
 ball_x, ball_y = WIDTH // 2, HEIGHT // 2
@@ -30,10 +28,14 @@ player2_score = 0
 angle1 = 0
 angle2 = 180
 
-# Function to save total wins to a file
-def save_total_wins(total_wins):
+# Function to save total wins and colors to a file
+def save_game_data(total_wins, player1_color, player2_color):
     with open('total_wins.json', 'w') as file:
-        json.dump({'total_wins': total_wins}, file)
+        json.dump({
+            'total_wins': total_wins,
+            'player1_color': player1_color,
+            'player2_color': player2_color
+        }, file)
 
 # Function to load total wins and colors from a file
 def load_game_data():
@@ -134,14 +136,14 @@ def draw_color_menu(angle, x_position, player_text, controls):
     screen.blit(text_down, (x_position - text_down.get_width() // 2, y_down))
 
 def change_controls(controls, event):
-        if event.key == pygame.K_UP:
-            print("Press a new key for 'Up'")
-            new_key = wait_for_key()
-            controls["up_key"] = new_key
-        elif event.key == pygame.K_DOWN:
-            print("Press a new key for 'Down'")
-            new_key = wait_for_key()
-            controls["down_key"] = new_key
+    if event.key == pygame.K_UP:
+        print("Press a new key for 'Up'")
+        new_key = wait_for_key()
+        controls["up_key"] = new_key
+    elif event.key == pygame.K_DOWN:
+        print("Press a new key for 'Down'")
+        new_key = wait_for_key()
+        controls["down_key"] = new_key
 
 def wait_for_key():
     waiting = True
@@ -176,7 +178,7 @@ while running:
                         angle2 -= 10
                     elif WIDTH * 3 // 4 + 50 <= event.pos[0] <= WIDTH * 3 // 4 + 80 and 235 <= event.pos[1] <= 285:
                         angle2 += 10
-        if game_state == "playing" : 
+        if game_state == "playing":
             keys = pygame.key.get_pressed()
             if keys[pygame.K_w] and player1_y > 0:
                 player1_y -= 15
@@ -208,7 +210,6 @@ while running:
 
         wins_display = font.render(f"Victoires: {total_wins}", True, WHITE)
         screen.blit(wins_display, (10, 10))
-
 
     elif game_state == "settings":
         # Draw settings
@@ -268,8 +269,8 @@ while running:
             player2_score += 1
             if player2_score == 10:
                 total_wins += 1
-                # Save total wins when a game is finished
-                save_total_wins(total_wins)
+                # Save total wins and colors when a game is finished
+                save_game_data(total_wins, get_rainbow_color(angle1), get_rainbow_color(angle2))
                 winner_display_time = pygame.time.get_ticks()
                 game_state = "winner_message"
             else:
@@ -279,8 +280,8 @@ while running:
             player1_score += 1
             if player1_score == 10:
                 total_wins += 1
-                # Save total wins when a game is finished
-                save_total_wins(total_wins)
+                # Save total wins and colors when a game is finished
+                save_game_data(total_wins, get_rainbow_color(angle1), get_rainbow_color(angle2))
                 winner_display_time = pygame.time.get_ticks()
                 game_state = "winner_message"
             else:
