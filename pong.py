@@ -2,6 +2,7 @@ import pygame
 import json
 from pygame.locals import *
 import colorsys
+import sys
 
 pygame.init()
 
@@ -55,23 +56,12 @@ total_wins, angle1, angle2 = load_game_data()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pong")
 
-player1_y = HEIGHT // 2 - PADDLE_HEIGHT // 2
-player2_y = HEIGHT // 2 - PADDLE_HEIGHT // 2
-ball_x, ball_y = WIDTH // 2, HEIGHT // 2
-ball_speed_x, ball_speed_y = 5, 5
-
-player1_score = 0
-player2_score = 0
-
 game_state = "menu"
 
 player1_controls_azerty = {pygame.K_z: -5, pygame.K_s: 5}
 player1_controls_qwerty = {pygame.K_w: -5, pygame.K_s: 5}
 player2_controls_azerty = {pygame.K_UP: -5, pygame.K_DOWN: 5}
 player2_controls_qwerty = {pygame.K_w: -5, pygame.K_s: 5}
-
-angle1 = 0
-angle2 = 180
 
 clock = pygame.time.Clock()
 running = True
@@ -151,8 +141,6 @@ def wait_for_key():
             if event.type == pygame.KEYDOWN:
                 return event.key
 
-
-running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -219,8 +207,8 @@ while running:
         text_title = font_title.render("Settings", True, WHITE)
         screen.blit(text_title, (WIDTH // 2 - text_title.get_width() // 2, 50))
 
-        draw_color_menu(angle1, WIDTH // 4, "Player 1", player1_controls_azerty)
-        draw_color_menu(angle2, WIDTH * 3 // 4, "Player 2", player2_controls_azerty)
+        draw_color_menu(angle1, WIDTH // 4, "Joueur 1", player1_controls_azerty)
+        draw_color_menu(angle2, WIDTH * 3 // 4, "Joueur 2", player2_controls_azerty)
 
         font_return = pygame.font.Font(None, 26)
         text_return = font_return.render("RETURN", True, WHITE)
@@ -270,9 +258,9 @@ while running:
         if ball_x <= 0:
             player2_score += 1
             if player2_score == 10:
-                total_wins += 1
+                total_wins +=                 1
                 # Save total wins and colors when a game is finished
-                save_game_data(total_wins, get_rainbow_color(angle1), get_rainbow_color(angle2))
+                save_game_data(total_wins, angle1, angle2)
                 winner_display_time = pygame.time.get_ticks()
                 game_state = "winner_message"
             else:
@@ -283,7 +271,7 @@ while running:
             if player1_score == 10:
                 total_wins += 1
                 # Save total wins and colors when a game is finished
-                save_game_data(total_wins, get_rainbow_color(angle1), get_rainbow_color(angle2))
+                save_game_data(total_wins, angle1, angle2)
                 winner_display_time = pygame.time.get_ticks()
                 game_state = "winner_message"
             else:
@@ -305,7 +293,7 @@ while running:
     elif game_state == "winner_message":
         screen.fill(BLACK)
         font = pygame.font.Font(None, 36)
-        winner_text = f"Player {1 if player1_score == 5 else 2} wins!"
+        winner_text = f"Joueur {1 if player1_score == 10 else 2} wins!"
         winner_display = font.render(winner_text, True, WHITE)
         winner_rect = winner_display.get_rect(center=(WIDTH // 2, HEIGHT // 2))
         screen.blit(winner_display, winner_rect)
@@ -326,3 +314,5 @@ while running:
     clock.tick(FPS)
 
 pygame.quit()
+sys.exit()
+
