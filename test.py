@@ -26,7 +26,7 @@ clock = pygame.time.Clock()
     
 def get_rainbow_color(angle):
     """Obtenir une couleur de l'arc-en-ciel en fonction de l'angle."""
-    angle %= NUM_COLORS  # Assurez-vous que l'angle reste dans la plage 0-359
+    angle %= NUM_COLORS  
     rgb = colorsys.hsv_to_rgb(angle / NUM_COLORS, 1.0, 1.0)
     return (int(rgb[0] * 255), int(rgb[1] * 255), int(rgb[2] * 255))
 
