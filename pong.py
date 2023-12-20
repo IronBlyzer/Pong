@@ -2,7 +2,6 @@ import pygame
 import json
 from pygame.locals import *
 import colorsys
-import sys
 
 pygame.init()
 
@@ -45,7 +44,7 @@ def load_game_data():
             return (
                 data.get('total_wins', 0),
                 data.get('angle1', angle1),
-                data.get('angle2', angle2) 
+                data.get('angle2', angle2)
             )
     except FileNotFoundError:
         return 0, angle1, angle2
