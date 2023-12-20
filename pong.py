@@ -204,7 +204,7 @@ while running:
     elif game_state == "settings":
         # Draw settings
         font_title = pygame.font.Font(None, 36)
-        text_title = font_title.render("Settings", True, WHITE)
+        text_title = font_title.render("Paramètres", True, WHITE)
         screen.blit(text_title, (WIDTH // 2 - text_title.get_width() // 2, 50))
 
         draw_color_menu(angle1, WIDTH // 4, "Joueur 1", player1_controls_azerty)
