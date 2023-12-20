@@ -1,4 +1,6 @@
 import pygame
+import sys
+import colorsys
 
 pygame.init()
 
@@ -67,13 +69,17 @@ while running:
         screen.fill(BLACK)
         font = pygame.font.Font(None, 36)
         play_option = font.render("Jouer", True, WHITE)
+        settings_option = font.render("Paramètres", True, WHITE)
 
         screen.blit(play_option, (WIDTH // 2 - 40, HEIGHT // 2 - 20))
+        screen.blit(settings_option, (WIDTH // 2 - 70, HEIGHT // 2 + 20))
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if WIDTH // 2 - 40 < mouse_x < WIDTH // 2 + 40 and HEIGHT // 2 - 20 < mouse_y < HEIGHT // 2 + 10:
                 game_state = "playing"
+            elif WIDTH // 2 - 70 < mouse_x < WIDTH // 2 + 70 and HEIGHT // 2 + 20 < mouse_y < HEIGHT // 2 + 60:
+                game_state = "settings"
 
     elif game_state == "playing":
         screen.fill(BLACK)
@@ -126,6 +132,18 @@ while running:
 
         if player1_score == 5 or player2_score == 5:
             running = False
+
+    elif game_state == "settings":
+        screen.fill(BLACK)
+        font = pygame.font.Font(None, 36)
+        back_option = font.render("Retour", True, WHITE)
+
+        screen.blit(back_option, (WIDTH // 2 - 40, HEIGHT - 50))
+
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if WIDTH // 2 - 40 < mouse_x < WIDTH // 2 + 40 and HEIGHT - 50 < mouse_y < HEIGHT - 30:
+                game_state = "menu"
 
     pygame.display.flip()
 
