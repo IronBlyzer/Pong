@@ -29,12 +29,12 @@ angle1 = 0
 angle2 = 180
 
 # Function to save total wins and colors to a file
-def save_game_data(total_wins, player1_color, player2_color):
+def save_game_data(total_wins, angle1, angle2):
     with open('total_wins.json', 'w') as file:
         json.dump({
             'total_wins': total_wins,
-            'player1_color': player1_color,
-            'player2_color': player2_color
+            'angle1': angle1,
+            'angle2': angle2
         }, file)
 
 # Function to load total wins and colors from a file
@@ -44,14 +44,14 @@ def load_game_data():
             data = json.load(file)
             return (
                 data.get('total_wins', 0),
-                data.get('player1_color', (255, 0, 0)),
-                data.get('player2_color', (0, 0, 255))
+                data.get('angle1', angle1),
+                data.get('angle2', angle2) 
             )
     except FileNotFoundError:
-        return 0, (255, 0, 0), (0, 0, 255)
+        return 0, angle1, angle2
 
 # Load total wins and colors at the start of the game
-total_wins, player1_color, player2_color = load_game_data()
+total_wins, angle1, angle2 = load_game_data()
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pong")
@@ -152,7 +152,6 @@ def wait_for_key():
             if event.type == pygame.KEYDOWN:
                 return event.key
 
-# Continue with the rest of the code...
 
 running = True
 while running:
@@ -167,6 +166,8 @@ while running:
                     game_state = "settings"
             elif game_state == "settings":
                 if WIDTH // 2 - 40 < event.pos[0] < WIDTH // 2 + 40 and HEIGHT - 50 < event.pos[1] < HEIGHT - 30:
+                    # Save colors immediately when returning to menu
+                    save_game_data(total_wins, angle1, angle2)
                     game_state = "menu"
                 else:
                     # Handle color menu clicks
@@ -178,6 +179,9 @@ while running:
                         angle2 -= 10
                     elif WIDTH * 3 // 4 + 50 <= event.pos[0] <= WIDTH * 3 // 4 + 80 and 235 <= event.pos[1] <= 285:
                         angle2 += 10
+                    # Save colors immediately when changed
+                    save_game_data(total_wins, angle1, angle2)
+
         if game_state == "playing":
             keys = pygame.key.get_pressed()
             if keys[pygame.K_w] and player1_y > 0:
@@ -188,7 +192,6 @@ while running:
                 player2_y -= 15
             if keys[pygame.K_DOWN] and player2_y < HEIGHT - PADDLE_HEIGHT:
                 player2_y += 15
-                
         elif event.type in [pygame.KEYDOWN, pygame.KEYUP]:
             if game_state == "settings":
                 change_controls(player1_controls_azerty, event)
