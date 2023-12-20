@@ -4,7 +4,7 @@ import colorsys
 
 pygame.init()
 
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 1600, 900
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 NUM_COLORS = 360
@@ -17,28 +17,19 @@ ball_x, ball_y = WIDTH // 2, HEIGHT // 2
 ball_speed_x, ball_speed_y = 5, 5
 player1_score = 0
 player2_score = 0
-
+vitpad = 10
 angle1 = 0
 angle2 = 180
-
-# Controls for Player 1 and Player 2
-player1_controls_azerty = {"up_key": pygame.K_z, "down_key": pygame.K_s}
-player2_controls_azerty = {"up_key": pygame.K_p, "down_key": pygame.K_m}
-
+scoremax = 5
+player1_controls_Up = pygame.K_z
+player1_controls_Down = pygame.K_s
+player2_controls_Down = pygame.K_p
+player2_controls_Up = pygame.K_m
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pong")
 
 clock = pygame.time.Clock()
 
-keys = pygame.key.get_pressed()
-if keys[pygame.K_w] and player1_y > 0:
-    player1_y -= 5
-if keys[pygame.K_s] and player1_y < HEIGHT - PADDLE_HEIGHT:
-    player1_y += 5
-if keys[pygame.K_UP] and player2_y > 0:
-    player2_y -= 5
-if keys[pygame.K_DOWN] and player2_y < HEIGHT - PADDLE_HEIGHT:
-    player2_y += 5
     
 def reset_ball():
     return WIDTH // 2, HEIGHT // 2
@@ -72,23 +63,36 @@ def draw_color_menu(angle, x_position, player_text, controls):
     screen.blit(text_up, (x_position - text_up.get_width() // 2, y_up))
     screen.blit(text_down, (x_position - text_down.get_width() // 2, y_down))
 
-def change_controls(controls, event):
-    if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_UP:
-            print("Press a new key for 'Up'")
-            new_key = wait_for_key()
-            controls["up_key"] = new_key
-        elif event.key == pygame.K_DOWN:
-            print("Press a new key for 'Down'")
-            new_key = wait_for_key()
-            controls["down_key"] = new_key
-
 def wait_for_key():
     waiting = True
     while waiting:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 return event.key
+            
+def change_controls_player1(player1_controls_UP , player1_controls_Down , event):
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_UP:
+            print("Appuyez sur la nouvelle touche pour 'Up' de Player 1")
+            new_key = wait_for_key()
+            player1_controls_Up = new_key
+        elif event.key == pygame.K_LEFT:
+            print("Appuyez sur la nouvelle touche pour 'Down' de Player 1")
+            new_key = wait_for_key()
+            player1_controls_Down = new_key
+
+def change_controls_player2(event):
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_DOWN:
+            print("Appuyez sur la nouvelle touche pour 'Down' de Player 2")
+            new_key = wait_for_key()
+            player2_controls_Up = new_key
+        elif event.key == pygame.K_RIGHT:
+            print("Appuyez sur la nouvelle touche pour 'Up' de Player 2")
+            new_key = wait_for_key()
+            player2_controls_Down = new_key        
+         
+
 
 # Initial game state
 game_state = "menu"
@@ -119,21 +123,11 @@ while running:
                         angle2 -= 10
                     elif WIDTH * 3 // 4 + 50 <= event.pos[0] <= WIDTH * 3 // 4 + 80 and 235 <= event.pos[1] <= 285:
                         angle2 += 10
-        if game_state == "playing" : 
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_w] and player1_y > 0:
-                player1_y -= 15
-            if keys[pygame.K_s] and player1_y < HEIGHT - PADDLE_HEIGHT:
-                player1_y += 15
-            if keys[pygame.K_UP] and player2_y > 0:
-                player2_y -= 15
-            if keys[pygame.K_DOWN] and player2_y < HEIGHT - PADDLE_HEIGHT:
-                player2_y += 15
     
         elif event.type in [pygame.KEYDOWN, pygame.KEYUP]:
-            if game_state == "settings":
-                change_controls(player1_controls_azerty, event)
-                change_controls(player2_controls_azerty, event)
+            if game_state == "settings" and event.type == pygame.KEYDOWN:
+                change_controls_player1(event)
+                change_controls_player2(event)
 
     angle1 %= NUM_COLORS
     angle2 %= NUM_COLORS
@@ -154,15 +148,14 @@ while running:
         text_title = font_title.render("Settings", True, WHITE)
         screen.blit(text_title, (WIDTH // 2 - text_title.get_width() // 2, 50))
 
-        draw_color_menu(angle1, WIDTH // 4, "Player 1", player1_controls_azerty)
-        draw_color_menu(angle2, WIDTH * 3 // 4, "Player 2", player2_controls_azerty)
+        draw_color_menu(angle1, WIDTH // 4, "Player 1")
+        draw_color_menu(angle2, WIDTH * 3 // 4, "Player 2")
 
         font_return = pygame.font.Font(None, 26)
         text_return = font_return.render("RETURN", True, WHITE)
         screen.blit(text_return, (WIDTH // 2 - text_return.get_width() // 2, HEIGHT - 50))
     
     elif game_state == "playing":
-        screen.fill(BLACK)
         pygame.draw.rect(screen, get_rainbow_color(angle1), (0, player1_y, PADDLE_WIDTH, PADDLE_HEIGHT))
         pygame.draw.rect(screen, get_rainbow_color(angle2), (WIDTH - PADDLE_WIDTH, player2_y, PADDLE_WIDTH, PADDLE_HEIGHT))
         pygame.draw.ellipse(screen, WHITE, (ball_x, ball_y, BALL_SIZE, BALL_SIZE))
@@ -172,6 +165,22 @@ while running:
         screen.blit(score_display, (WIDTH // 2 - 40, 20))
 
         
+        keys = pygame.key.get_pressed()
+        if keys[player1_controls_Up] and player1_y > 0:
+            player1_y -= vitpad
+            print(player1_y)
+        elif keys[player1_controls_Down] and player1_y < HEIGHT - PADDLE_HEIGHT:
+            player1_y += vitpad
+            print(player1_y)
+        elif keys[player2_controls_Up] and player2_y < HEIGHT - PADDLE_HEIGHT:
+            player2_y += vitpad
+            print(player2_y)
+        elif keys[player2_controls_Down] and player2_y > 0:
+            player2_y -= vitpad
+            print(player2_y)
+        
+
+ 
 
         ball_x += ball_speed_x
         ball_y += ball_speed_y
@@ -193,7 +202,7 @@ while running:
             player1_score += 1
             ball_x, ball_y = reset_ball()
 
-        if player1_score == 5 or player2_score == 5:
+        if player1_score == scoremax or player2_score == scoremax:
             running = False
 
     pygame.display.flip()
