@@ -24,7 +24,7 @@ Configuration du projet
 
 1. Compilez Python.
 2. Exécutez la procédure d'installation de Pygame à l'aide de la commande "pip install pygame".
-3. Assurez-vous que vous disposez d'une collection musicale spécifique dans un dossier particulier qui vous permettra de jouer de la musique aléatoire.
+3. Assurez-vous que vous disposez d'une collection musicale spécifique dans le dossier musiques qui vous permettra de jouer de la musique aléatoire.
 
 ## TEAM 02
 Adrien M
