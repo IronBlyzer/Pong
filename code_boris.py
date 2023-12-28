@@ -6,6 +6,10 @@ import sys
 
 pygame.init()
 
+pygame.mixer.init()
+pygame.mixer.music.load('fast.mp3')
+pygame.mixer.music.play()
+
 WIDTH, HEIGHT = 800, 600
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
