@@ -298,7 +298,7 @@ while running:
     elif game_state == "winner_message":
         screen.fill(BLACK)
         font = pygame.font.Font(None, 36)
-        winner_text = f"Joueur {2 if player1_score == 1 else 1} gagne!"
+        winner_text = f"Joueur {1 if player1_score == 1 else 2} gagne!"
         winner_display = font.render(winner_text, True, WHITE)
         winner_rect = winner_display.get_rect(center=(WIDTH // 2, HEIGHT // 2))
         screen.blit(winner_display, winner_rect)
