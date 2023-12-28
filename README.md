@@ -1,4 +1,4 @@
-# Pong
+## Pong
 
 Bienvenue dans le jeu Pong créé à l'aide de la bibliothèque Pygame en Python.
 
