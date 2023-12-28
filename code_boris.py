@@ -116,8 +116,6 @@ def draw_color_menu(angle, x_position, player_text):
 
 game_state = "menu"
 
-
-
 running = True
 while running:
     for event in pygame.event.get():
