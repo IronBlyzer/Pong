@@ -16,19 +16,15 @@ BALL_SIZE = 20
 def set_game_state(state):
     global game_state, player1_score, player2_score, ball_x, ball_y
     if state == "menu":
-        # Reset game variables when returning to the menu
         player1_score = 0
         player2_score = 0
         ball_x, ball_y = WIDTH // 2, HEIGHT // 2
         game_state = state
     elif state == "playing":
-        # Add any additional setup needed when transitioning to the playing state
         game_state = state
     elif state == "winner_message":
-        # Add any additional setup needed when transitioning to the winner message state
         game_state = state
     elif state == "settings":
-        # Add any additional setup needed when transitioning to the settings state
         game_state = state
 
 player1_y = HEIGHT // 2 - PADDLE_HEIGHT // 2
@@ -50,9 +46,8 @@ pygame.display.set_caption("Pong")
 
 clock = pygame.time.Clock()
 winner_display_time = 0
-winner_display_duration = 15000  # 15 seconds in milliseconds
+winner_display_duration = 15000 
 
-# Function to save total wins and colors to a file
 def save_game_data(total_wins, angle1, angle2):
     with open('total_wins.json', 'w') as file:
         json.dump({
@@ -74,7 +69,6 @@ class Button:
         text_rect = text.get_rect(center=self.rect.center)
         screen.blit(text, text_rect)
 
-# Function to load total wins and colors from a file
 def load_game_data():
     try:
         with open('total_wins.json', 'r') as file:
@@ -87,7 +81,6 @@ def load_game_data():
     except FileNotFoundError:
         return 0, angle1, angle2
 
-# Load total wins and colors at the start of the game
 total_wins, angle1, angle2 = load_game_data()
 
 def reset_ball():
@@ -109,20 +102,18 @@ def draw_color_menu(angle, x_position, player_text):
     text = font.render(player_text, True, WHITE)
     screen.blit(text, (x_position - text.get_width() // 2, 150))
 
-    pygame.draw.rect(screen, (BLACK), (x_position - 100, 235, 50, 50))  # Left button
-    pygame.draw.rect(screen, (BLACK), (x_position + 51, 235, 50, 50))  # Right button
+    pygame.draw.rect(screen, (BLACK), (x_position - 100, 235, 50, 50))
+    pygame.draw.rect(screen, (BLACK), (x_position + 51, 235, 50, 50)) 
     font_title = pygame.font.Font(None, 152)
     fleche1 = font_title.render("<", True, (255, 255, 255))
     fleche2 = font_title.render(">", True, (255, 255, 255))
     screen.blit(fleche1, (x_position - 105, 200))
     screen.blit(fleche2, (x_position + 46, 200))
 
-# Initial game state
 game_state = "menu"
 
 
 
-# Main loop
 running = True
 while running:
     for event in pygame.event.get():
@@ -136,11 +127,9 @@ while running:
                     set_game_state("settings")
             elif game_state == "settings":
                 if WIDTH // 2 - 40 < event.pos[0] < WIDTH // 2 + 40 and HEIGHT - 50 < event.pos[1] < HEIGHT - 30:
-                    # Save colors immediately when returning to menu
                     save_game_data(total_wins, angle1, angle2)
                     set_game_state("menu")
                 else:
-                    # Handle color menu clicks
                     if WIDTH // 4 - 80 <= event.pos[0] <= WIDTH // 4 - 50 and 235 <= event.pos[1] <= 285:
                         angle1 -= 10
                     elif WIDTH // 4 + 50 <= event.pos[0] <= WIDTH // 4 + 80 and 235 <= event.pos[1] <= 285:
@@ -149,7 +138,6 @@ while running:
                         angle2 -= 10
                     elif WIDTH * 3 // 4 + 50 <= event.pos[0] <= WIDTH * 3 // 4 + 80 and 235 <= event.pos[1] <= 285:
                         angle2 += 10
-                    # Save colors immediately when changed
                     save_game_data(total_wins, angle1, angle2)
 
     angle1 %= NUM_COLORS
@@ -158,7 +146,6 @@ while running:
     screen.fill(BLACK)
 
     if game_state == "menu":
-        # Draw menu options
         font = pygame.font.Font(None, 36)
         play_option = font.render("Jouer", True, WHITE)
         settings_option = font.render("Paramètres", True, WHITE)
@@ -168,7 +155,6 @@ while running:
         screen.blit(wins_display, (10, 10))
         
     elif game_state == "settings":
-        # Draw settings
         font_title = pygame.font.Font(None, 36)
         text_title = font_title.render("Paramètres", True, WHITE)
         screen.blit(text_title, (WIDTH // 2 - text_title.get_width() // 2, 50))
@@ -225,9 +211,8 @@ while running:
 
         if ball_x <= 0:
             player2_score += 1
-            if player2_score == 1:
+            if player2_score == 10:
                 total_wins += 1
-                # Save total wins and colors when a game is finished
                 save_game_data(total_wins, angle1, angle2)
                 winner_display_time = pygame.time.get_ticks()
                 set_game_state("winner_message")
@@ -236,9 +221,8 @@ while running:
 
         elif ball_x >= WIDTH - BALL_SIZE:
             player1_score += 1
-            if player1_score == 1:
+            if player1_score == 10:
                 total_wins += 1
-                # Save total wins and colors when a game is finished
                 save_game_data(total_wins, angle1, angle2)
                 winner_display_time = pygame.time.get_ticks()
                 set_game_state("winner_message")
@@ -248,7 +232,7 @@ while running:
     elif game_state == "winner_message":
         screen.fill(BLACK)
         font = pygame.font.Font(None, 36)
-        winner_text = f"Joueur {1 if player1_score == 1 else 2} gagne!"
+        winner_text = f"Joueur {2 if player1_score == 1 else 1} gagne!"
         winner_display = font.render(winner_text, True, WHITE)
         winner_rect = winner_display.get_rect(center=(WIDTH // 2, HEIGHT // 2))
         screen.blit(winner_display, winner_rect)
@@ -259,7 +243,6 @@ while running:
             if menu_button.rect.collidepoint(mouse_x, mouse_y):
                 set_game_state("menu")
 
-    # Check if 15 seconds have passed since displaying the winner message
     if game_state == "winner_message" and winner_display_time > 0 and pygame.time.get_ticks() - winner_display_time > winner_display_duration:
         set_game_state("menu")
         winner_display_time = 0
