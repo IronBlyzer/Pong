@@ -49,7 +49,6 @@ player2_score = 0
 vitpad = 10
 angle1 = 0
 angle2 = 180
-scoremax = 10
 player1_controls_Up = pygame.K_a
 player1_controls_Down = pygame.K_q
 player2_controls_Down = pygame.K_m
@@ -277,7 +276,7 @@ while running:
 
         if ball_x <= 0:
             player2_score += 1
-            if player2_score == 1:
+            if player2_score == 5:
                 points += 1
                 save_game_data(points, angle1, angle2)
                 winner_display_time = pygame.time.get_ticks()
@@ -287,7 +286,7 @@ while running:
 
         elif ball_x >= WIDTH - BALL_SIZE:
             player1_score += 1
-            if player1_score == 1:
+            if player1_score == 5:
                 points += 1
                 save_game_data(points, angle1, angle2)
                 winner_display_time = pygame.time.get_ticks()
@@ -298,7 +297,7 @@ while running:
     elif game_state == "winner_message":
         screen.fill(BLACK)
         font = pygame.font.Font(None, 36)
-        winner_text = f"Joueur {1 if player1_score == 1 else 2} gagne!"
+        winner_text = f"Joueur {1 if player1_score == 5 else 2} gagne!"
         winner_display = font.render(winner_text, True, WHITE)
         winner_rect = winner_display.get_rect(center=(WIDTH // 2, HEIGHT // 2))
         screen.blit(winner_display, winner_rect)
