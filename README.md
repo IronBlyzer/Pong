@@ -10,7 +10,7 @@ Le jeu Pong est une simple variante du jeu de tennis de table populaire qui prop
 
 - **Menu principal :** Les options du menu principal sont à votre disposition, vous pouvez choisir de jouer, d'accéder aux paramètres ou d'aller au magasin à partir du menu principal.
 - **Paramètres :** Permet aux joueurs de modifier la couleur de leurs paramètres et de contrôler leurs actions.
-- **Image Store :** Utilisez les points que vous gagnez en jouant pour acheter des images dans la boutique.
+- **Boutique Images :** Utilisez les points que vous gagnez en jouant pour acheter des images dans la boutique.
 - **Musique aléatoire :** Jouez de la musique aléatoire à partir d'un emplacement spécifique.
 - **Victoire :** Gagnez des points en remportant des jeux et en publiant de nouvelles fonctionnalités.
 
