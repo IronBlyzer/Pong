@@ -28,5 +28,7 @@ Configuration du projet
 
 ## TEAM 02
 Adrien M
+
 Victorien SM
+
 Boris K
