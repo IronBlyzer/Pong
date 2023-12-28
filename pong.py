@@ -78,7 +78,7 @@ def draw_shop():
         text = font.render(f"{image} - 5 points", True, WHITE)
         screen.blit(text, (200, 150 + i * 120))
 
-    text_points = font.render(f"Points: {total_wins}", True, WHITE)
+    text_points = font.render(f"Points: {points}", True, WHITE)
     screen.blit(text_points, (50, 50))
 
 def draw_return_button():
@@ -89,10 +89,10 @@ def draw_return_button():
     pygame.display.flip()
 
 
-def save_game_data(total_wins, angle1, angle2):
-    with open('total_wins.json', 'w') as file:
+def save_game_data(points, angle1, angle2):
+    with open('points.json', 'w') as file:
         json.dump({
-            'total_wins': total_wins,
+            'points': points,
             'angle1': angle1,
             'angle2': angle2
         }, file)
@@ -112,17 +112,17 @@ class Button:
 
 def load_game_data():
     try:
-        with open('total_wins.json', 'r') as file:
+        with open('points.json', 'r') as file:
             data = json.load(file)
             return (
-                data.get('total_wins', 0),
+                data.get('points', 0),
                 data.get('angle1', angle1),
                 data.get('angle2', angle2)
             )
     except FileNotFoundError:
         return 0, angle1, angle2
 
-total_wins, angle1, angle2 = load_game_data()
+points, angle1, angle2 = load_game_data()
 
 def reset_ball():
     return WIDTH // 2, HEIGHT // 2
@@ -169,7 +169,7 @@ while running:
                     set_game_state("shop")
             elif game_state == "settings":
                 if WIDTH // 2 - 40 < event.pos[0] < WIDTH // 2 + 40 and HEIGHT - 50 < event.pos[1] < HEIGHT - 30:
-                    save_game_data(total_wins, angle1, angle2)
+                    save_game_data(points, angle1, angle2)
                     set_game_state("menu")
                 else:
                     if WIDTH // 4 - 80 <= event.pos[0] <= WIDTH // 4 - 50 and 235 <= event.pos[1] <= 285:
@@ -180,14 +180,14 @@ while running:
                         angle2 -= 10
                     elif WIDTH * 3 // 4 + 50 <= event.pos[0] <= WIDTH * 3 // 4 + 80 and 235 <= event.pos[1] <= 285:
                         angle2 += 10
-                    save_game_data(total_wins, angle1, angle2)
+                    save_game_data(points, angle1, angle2)
             elif game_state == "shop":
                 x, y = event.pos
                 for i, image in enumerate(shop_images):
                     if 50 <= x <= 150 and 150 + i * 120 <= y <= 150 + (i + 1) * 120:
                         selected_image = image
-                        if total_wins >= 5:
-                            total_wins -= 5
+                        if points >= 5:
+                            points -= 5
                             player_images.append(selected_image)
                             print(f"Achat approuvé: {selected_image}")
                             selected_image = None
@@ -211,7 +211,7 @@ while running:
         screen.blit(shop_option, (WIDTH - 120, 10))
         screen.blit(play_option, (WIDTH // 2 - 40, HEIGHT // 2 - 20))
         screen.blit(settings_option, (WIDTH // 2 - 70, HEIGHT // 2 + 20))
-        wins_display = font.render(f"Points: {total_wins}", True, WHITE)
+        wins_display = font.render(f"Points: {points}", True, WHITE)
         screen.blit(wins_display, (10, 10))
 
     elif game_state == "settings":
@@ -278,8 +278,8 @@ while running:
         if ball_x <= 0:
             player2_score += 1
             if player2_score == 1:
-                total_wins += 1
-                save_game_data(total_wins, angle1, angle2)
+                points += 1
+                save_game_data(points, angle1, angle2)
                 winner_display_time = pygame.time.get_ticks()
                 set_game_state("winner_message")
             else:
@@ -288,8 +288,8 @@ while running:
         elif ball_x >= WIDTH - BALL_SIZE:
             player1_score += 1
             if player1_score == 1:
-                total_wins += 1
-                save_game_data(total_wins, angle1, angle2)
+                points += 1
+                save_game_data(points, angle1, angle2)
                 winner_display_time = pygame.time.get_ticks()
                 set_game_state("winner_message")
             else:
