@@ -17,7 +17,7 @@ pygame.mixer.music.load(selected_music)
 pygame.mixer.music.play()
 
 
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 1600, 900
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 NUM_COLORS = 360
@@ -63,6 +63,17 @@ winner_display_duration = 15000
 repertoire_images = "images"
 shop_images = [f for f in os.listdir(repertoire_images) if f.endswith(('.png', '.jpg', '.jpeg'))]
 selected_image = None
+
+# Load images for background
+background_images_folder = "images"
+background_images = [f for f in os.listdir(background_images_folder) if f.endswith(('.png', '.jpg', '.jpeg'))]
+background_image = None  # Variable to store the background image
+
+# Function to get a random background image
+def get_random_background():
+    return pygame.image.load(os.path.join(background_images_folder, random.choice(background_images)))
+
+
 
 def draw_shop():
     screen.fill(BLACK)
@@ -199,7 +210,11 @@ while running:
     angle1 %= NUM_COLORS
     angle2 %= NUM_COLORS
 
-    screen.fill(BLACK)
+    if background_image is None:
+        background_image = get_random_background()
+
+    screen.blit(background_image, (0, 0))
+
 
     if game_state == "menu":
         font = pygame.font.Font(None, 36)
