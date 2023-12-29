@@ -64,12 +64,10 @@ repertoire_images = "images"
 shop_images = [f for f in os.listdir(repertoire_images) if f.endswith(('.png', '.jpg', '.jpeg'))]
 selected_image = None
 
-# Load images for background
 background_images_folder = "images"
 background_images = [f for f in os.listdir(background_images_folder) if f.endswith(('.png', '.jpg', '.jpeg'))]
-background_image = None  # Variable to store the background image
+background_image = None
 
-# Function to get a random background image
 def get_random_background():
     return pygame.image.load(os.path.join(background_images_folder, random.choice(background_images)))
 
